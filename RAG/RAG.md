@@ -125,3 +125,4 @@ El titular del software/base de datos (DataCorp o su cliente) puede instar accio
 **3. Consecuencias Penales (Atacante)**
 
 Aunque los estados miembros pueden establecer sus propias normas penales [12, 41], la LPI menciona la persecución penal en caso de infracción de derechos [42]. Si se sigue una causa criminal por infracción de derechos, el juez puede adoptar las **medidas cautelares procedentes en procesos civiles** (como el secuestro de ejemplares) [42, 43].
+j
