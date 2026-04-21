@@ -4,3 +4,4 @@
 node_modules/
 reports/dependency-check/
 reports/zap/
+.propierties
