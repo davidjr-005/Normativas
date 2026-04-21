@@ -1,6 +1,6 @@
 # VetCare — Plataforma Web de Clínica Veterinaria
 
-> Aplicación web full-stack para gestión integral de clínica veterinaria: tienda de artículos, adopción de mascotas y servicios veterinarios, con sistema de ofertas exclusivas para adoptantes.
+> Aplicación web full-stack para gestión integral de clínica veterinaria: tienda de artículos, adopción de mascotas, servicios veterinarios, con sistema de ofertas exclusivas para adoptantes.
 
 ---
 
