@@ -18,45 +18,26 @@ exports.getPets = async (req, res) => {
 
 exports.getAll = async (req, res) => {
   try {
-    const { data: adoptions, error: adoptionsError } = await supabaseAdmin
+    // Usamos el join nativo de Supabase usando el nombre de la relación
+    // 'pets' debe coincidir con el nombre de la tabla relacionada
+    const { data, error } = await supabaseAdmin
       .from('adoptions')
-      .select('*');
+      .select(`
+        *,
+        pets (*)
+      `);
 
-    if (adoptionsError) {
-      console.error('getAll adoptions error:', adoptionsError);
-      return res.status(500).json({ error: adoptionsError.message });
+    if (error) {
+      console.error('getAll supabase error:', error);
+      return res.status(500).json({ error: error.message });
     }
 
-    const petIds = [...new Set((adoptions || []).map(a => a.pet_id).filter(Boolean))];
-
-    let petsMap = {};
-
-    if (petIds.length > 0) {
-      const { data: pets, error: petsError } = await supabaseAdmin
-        .from('pets')
-        .select('id, name, species, breed, age, status, description')
-        .in('id', petIds);
-
-      if (petsError) {
-        console.error('getAll pets error:', petsError);
-        return res.status(500).json({ error: petsError.message });
-      }
-
-      petsMap = Object.fromEntries((pets || []).map(p => [p.id, p]));
-    }
-
-    const result = (adoptions || []).map(adoption => ({
-      ...adoption,
-      pets: petsMap[adoption.pet_id] || null
-    }));
-
-    return res.json(result);
+    return res.json(data || []);
   } catch (e) {
     console.error('getAll catch error:', e);
     return res.status(500).json({ error: e.message });
   }
 };
-
 exports.adopt = async (req, res) => {
   try {
     const { pet_id } = req.body;
