@@ -18,22 +18,39 @@ exports.getPets = async (req, res) => {
 
 exports.getAll = async (req, res) => {
   try {
-    console.log('USER EN GETALL:', req.user);
-
-    const { data, error } = await supabaseAdmin
+    const { data: adoptions, error: adoptionsError } = await supabaseAdmin
       .from('adoptions')
       .select('*');
 
-    if (error) {
-      console.error('getAll supabase error:', error);
-      return res.status(500).json({
-        error: error.message,
-        details: error.details,
-        hint: error.hint
-      });
+    if (adoptionsError) {
+      console.error('getAll adoptions error:', adoptionsError);
+      return res.status(500).json({ error: adoptionsError.message });
     }
 
-    return res.json(data || []);
+    const petIds = [...new Set((adoptions || []).map(a => a.pet_id).filter(Boolean))];
+
+    let petsMap = {};
+
+    if (petIds.length > 0) {
+      const { data: pets, error: petsError } = await supabaseAdmin
+        .from('pets')
+        .select('id, name, species, breed, age, status, description')
+        .in('id', petIds);
+
+      if (petsError) {
+        console.error('getAll pets error:', petsError);
+        return res.status(500).json({ error: petsError.message });
+      }
+
+      petsMap = Object.fromEntries((pets || []).map(p => [p.id, p]));
+    }
+
+    const result = (adoptions || []).map(adoption => ({
+      ...adoption,
+      pets: petsMap[adoption.pet_id] || null
+    }));
+
+    return res.json(result);
   } catch (e) {
     console.error('getAll catch error:', e);
     return res.status(500).json({ error: e.message });
