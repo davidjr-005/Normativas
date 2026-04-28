@@ -22,18 +22,15 @@ exports.getAll = async (req, res) => {
 
     const { data, error } = await supabaseAdmin
       .from('adoptions')
-      .select(`
-        *,
-        pets (
-          name,
-          species,
-          breed
-        )
-      `);
+      .select('*');
 
     if (error) {
       console.error('getAll supabase error:', error);
-      return res.status(500).json({ error: error.message, details: error.details, hint: error.hint });
+      return res.status(500).json({
+        error: error.message,
+        details: error.details,
+        hint: error.hint
+      });
     }
 
     return res.json(data || []);
